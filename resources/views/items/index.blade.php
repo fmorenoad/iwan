@@ -27,7 +27,7 @@
                             @include('alerts.success')
                             @include('alerts.errors')
                         </div>
-                        
+
                         <div class="table-responsive py-4">
                             <table id="datatables" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%" style="width:100% ">
                                 <thead>
@@ -35,9 +35,9 @@
                                         <th>{{ __('Name') }}</th>
                                         <th>{{ __('Picture') }}</th>
                                         <th>{{ __('Category') }}</th>
-                                        <th>{{ __('Tags') }}</th> 
+                                        <th>{{ __('Tags') }}</th>
                                         <th>{{ __('Creation Data') }}</th>
-                                        @can('manage-items', App\User::class)
+                                        @can('manage-items', App\Models\User::class)
                                             <th class="disabled-sorting text-right">{{ __('Actions') }}</th>
                                         @endcan
                                     </tr>
@@ -49,7 +49,7 @@
                                         <th>{{ __('Category') }}</th>
                                         <th>{{ __('Tags') }}</th>
                                         <th>{{ __('Creation Data') }}</th>
-                                        @can('manage-items', App\User::class)
+                                        @can('manage-items', App\Models\User::class)
                                             <th class="text-right">{{ __('Actions') }}</th>
                                         @endcan
                                     </tr>
@@ -59,7 +59,7 @@
                                     @foreach ($items as $item)
                                         <tr>
                                             <td>{{ $item->name }}</td>
-                                            <td> 
+                                            <td>
                                                 @if($item->picture)
                                                     <img src="{{ $item->path() }}" style="max-width:130px;">
                                                 @endif
@@ -67,7 +67,7 @@
                                             <td>{{ $item->category->name }}</td>
                                             <td>{{ $item->tags->implode('name',', ') }} </td>
                                             <td>{{ $item->created_at }}</td>
-                                            @can('manage-items', App\User::class)
+                                            @can('manage-items', App\Models\User::class)
                                                 <td class="text-right">
                                                     @if (auth()->user()->can('update', $item) || auth()->user()->can('delete', $item))
                                                             @can('update', $item)

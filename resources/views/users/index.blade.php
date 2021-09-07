@@ -15,7 +15,7 @@
                                         {{ __('This is an example of user management. This is a minimal setup in order to get started fast.') }}
                                     </p>
                                 </div>
-                                @can('create', App\User::class)
+                                @can('create', App\Models\User::class)
                                     <div class="col-4 text-right">
                                         <a href="{{ route('user.create') }}" class="btn btn-sm btn-primary">{{ __('Add user') }}</a>
                                     </div>
@@ -40,7 +40,7 @@
                                         <th>{{ __('Email') }}</th>
                                         <th>{{ __('Role') }}</th>
                                         <th>{{ __('Start') }}</th>
-                                        @can('manage-users', App\User::class)
+                                        @can('manage-users', App\Models\User::class)
                                             <th class="disabled-sorting text-right">{{ __('Actions') }}</th>
                                         @endcan
                                     </tr>
@@ -52,7 +52,7 @@
                                         <th>{{ __('Email') }}</th>
                                         <th>{{ __('Role') }}</th>
                                         <th>{{ __('Start') }}</th>
-                                        @can('manage-users', App\User::class)
+                                        @can('manage-users', App\Models\User::class)
                                             <th class="text-right">{{ __('Actions') }}</th>
                                         @endcan
                                     </tr>
@@ -61,16 +61,16 @@
 
                                     @foreach ($users as $user)
                                         <tr>
-                                            <td> 
-                                                <span class="rounded-circle">  
-                                                    <img src="{{$user->profilePicture() }}" class="rounded-circle" style="max-width:50px;" > 
+                                            <td>
+                                                <span class="rounded-circle">
+                                                    <img src="{{$user->profilePicture() }}" class="rounded-circle" style="max-width:50px;" >
                                                 </span>
                                             </td>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->role->name }}</td>
                                             <td>{{ $user->created_at }}</td>
-                                            @can('manage-users', App\User::class)
+                                            @can('manage-users', App\Models\User::class)
                                                 <td class="text-right">
                                                     @if (auth()->user()->can('update', $user) || auth()->user()->can('delete', $user))
                                                         @if ($user->id != auth()->id())
@@ -84,7 +84,7 @@
                                                                     <a class="btn btn-link btn-danger " onclick="confirm('{{ __('Are you sure you want to delete this user?') }}') ? this.parentElement.submit() : ''"s><i class="fa fa-times"></i></a>
                                                                 </form>
                                                             @endcan
-                                                        @else    
+                                                        @else
                                                             <a href="{{ route('profile.edit', $user->id) }}" class="btn btn-link btn-warning edit d-inline-block"><i class="fa fa-edit"></i></a>
                                                         @endif
                                                     @endif

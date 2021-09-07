@@ -34,7 +34,7 @@
                                     <tr>
                                         <th>{{ __('Name') }}</th>
                                         <th>{{ __('Description') }}</th>
-                                        @can('manage-users', App\User::class)
+                                        @can('manage-users', App\Models\User::class)
                                             <th class="disabled-sorting text-right">{{ __('Actions') }}</th>
                                         @endcan
                                     </tr>
@@ -43,7 +43,7 @@
                                     <tr>
                                         <th>{{ __('Name') }}</th>
                                         <th>{{ __('Description') }}</th>
-                                        @can('manage-users', App\User::class)
+                                        @can('manage-users', App\Models\User::class)
                                             <th class="text-right">{{ __('Actions') }}</th>
                                         @endcan
                                     </tr>
@@ -54,7 +54,7 @@
                                         <tr>
                                             <td>{{ $role->name }}</td>
                                             <td>{{ $role->description }}</td>
-                                            @can('manage-users', App\User::class)
+                                            @can('manage-users', App\Models\User::class)
                                                 <td class="text-right">
                                                     @if (auth()->user()->can('update', $role) || auth()->user()->can('delete', $role))
                                                         @can('update', $role)

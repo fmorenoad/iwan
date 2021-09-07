@@ -46,11 +46,11 @@ class FortifyServiceProvider extends ServiceProvider
 
         #averiguar que significa esta vista
         Fortify::requestPasswordResetLinkView(function () {
-            return view('auth.password.reset');
+            return view('auth.passwords.email');
         });
 
         Fortify::resetPasswordView(function ($request) {
-            return view('auth.reset-password', ['request' => $request]);
+            return view('auth.passwords.reset', ['request' => $request]);
         });
 
         RateLimiter::for('login', function (Request $request) {

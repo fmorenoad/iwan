@@ -35,17 +35,17 @@
                                         <th>{{ __('Name') }}</th>
                                         <th>{{ __('Color') }}</th>
                                         <th>{{ __('Creation data') }}</th>
-                                        @can('manage-items', App\User::class)
+                                        @can('manage-items', App\Models\User::class)
                                             <th class="disabled-sorting text-right">{{ __('Actions') }}</th>
                                         @endcan
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th>{{ __('Name') }}</th> 
+                                        <th>{{ __('Name') }}</th>
                                         <th>{{ __('Color') }}</th>
                                         <th>{{ __('Creation data') }}</th>
-                                        @can('manage-items', App\User::class)
+                                        @can('manage-items', App\Models\User::class)
                                             <th class="text-right">{{ __('Actions') }}</th>
                                         @endcan
                                     </tr>
@@ -57,7 +57,7 @@
                                             <td>{{ $tag->name }}</td>
                                             <td><span class="badge badge-default" style="background-color:{{ $tag->color }}">{{ $tag->name }}</span></td>
                                             <td>{{ $tag->created_at }}</td>
-                                            @can('manage-items', App\User::class)
+                                            @can('manage-items', App\Models\User::class)
                                                 <td class="text-right">
                                                     @if (auth()->user()->can('update', $tag) || auth()->user()->can('delete', $tag))
                                                         @can('update', $tag)

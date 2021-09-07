@@ -13,9 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('welcome');
+});
+Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('profile/password', [ProfileController::class, 'password'])->name('profile.password');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('profile', [ProfileController::class, 'password'])->name('profile.password');
 });
 
 Route::get('home', [HomeController::class, 'index'])->name('home');

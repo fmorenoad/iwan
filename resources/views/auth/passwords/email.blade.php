@@ -12,8 +12,8 @@
                                 <div class="card-header">{{ __('Reset Password') }}</div>
 
                                 <div class="card-body">
-                                    {{-- @include('alerts.success')
-                                    @include('alerts.errors' ) --}}
+                                    @include('alerts.success')
+                                    @include('alerts.errors' )
                                     <div class="form-group row">
                                         <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
@@ -35,10 +35,10 @@
                                             </button>
                                         </div>
                                     </div>
-                    
+
                                 </div>
                             </div>
-                        </form>  
+                        </form>
                     </div>
                 </div>
             </div>

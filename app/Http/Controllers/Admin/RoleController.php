@@ -10,14 +10,20 @@ use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
-    private $title = 'Administración';
+    private $activePage = 'roles';
+    private $activeButton = 'admin';
+    private $navName = 'roles';
+    private $title = 'Roles Management';
     private $subtitle = 'Gestión de Roles';
 
     public function index()
     {
         $roles = Role::all();
 
-        return view('admin.role.index',[
+        return view('admins.roles.index',[
+            'activePage' => $this->activePage,
+            'activeButton' => $this->activeButton,
+            'navName' => $this->navName,
             'title' => $this->title,
             'subtitle' => $this->subtitle,
             'roles' => $roles
@@ -28,7 +34,10 @@ class RoleController extends Controller
     {
         $permissions = Permission::all();
 
-        return view('admin.role.create',[
+        return view('admins.roles.create',[
+            'activePage' => $this->activePage,
+            'activeButton' => $this->activeButton,
+            'navName' => $this->navName,
             'title' => $this->title,
             'subtitle' => $this->subtitle,
             'permissions' => $permissions
@@ -44,12 +53,12 @@ class RoleController extends Controller
 
         $role->givePermissionTo($request->permissions);
 
-        return redirect()->route('role.index')->with('message', 'Rol '.$role.' creado con éxito');
+        return redirect()->route('roles.index')->with('message', 'Rol '.$role.' creado con éxito');
     }
 
     public function destroy(Role $role, Request $request)
     {
         $role->delete();
-        return back()->with('message', 'Rol eliminado con éxito');
+        return redirect()->route('roles.index')->with('message', 'Rol eliminado con éxito');
     }
 }
