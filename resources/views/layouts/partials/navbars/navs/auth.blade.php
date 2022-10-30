@@ -61,9 +61,9 @@
                         <i class="nc-icon nc-bullet-list-67"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" id="logout">
-                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                        {{-- <a class="dropdown-item" href="{{ route('profile.edit') }}">
                             <i class="nc-icon nc-single-02"></i> {{ __('My Profile') }}
-                        </a>
+                        </a> --}}
                         <div class="divider"></div>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf

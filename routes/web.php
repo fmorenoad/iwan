@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +23,20 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 /* Route::prefix('admin')->group(function () {
     Route::get('/permission',[Permission]);
 }); */
+
+Route::group(['middleware' => 'auth'], function () {
+    /* Route::get('profile', 'ProfileController@edit')->name('profile.edit');
+    Route::patch('profile/update', 'ProfileController@update')->name('profile.update');
+    Route::patch('profile/password', 'ProfileController@password')->name('profile.password');
+    
+    Route::resource('user', 'UserController', ['except' => ['show']]);
+    Route::resource('category', 'CategoryController', ['except' => ['show']]);
+    Route::resource('tag', 'TagController', ['except' => ['show']]);
+    Route::resource('item', 'ItemController', ['except' => ['show']]);
+    Route::resource('role', 'RoleController', ['except' => ['show']]);
+
+    Route::get('{page}', 'PageController@index')->name('page.index'); */
+
+    // Rutas agregadas por iWan
+    Route::get('admin/permissions', [PermissionController::class, 'index'])->name('admin.permissions.index');
+});

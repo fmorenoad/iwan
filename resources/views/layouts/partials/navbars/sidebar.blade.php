@@ -66,7 +66,7 @@ Tip 2: you can also add an image using data-image tag
                             </a>
                         </li>
 
-                        <li class="nav-item @if($activePage == 'profile') active @endif">
+                        {{-- <li class="nav-item @if($activePage == 'profile') active @endif">
                             <a class="nav-link" href={{ route('profile.edit') }}>
                                 <span class="sidebar-mini">{{ __('P') }}</span>
                                 <span class="sidebar-normal">{{ __('Profile') }}</span>
@@ -123,7 +123,7 @@ Tip 2: you can also add an image using data-image tag
                                     <span class="sidebar-normal">{{ __('Items') }}</span>
                                 </a>
                             </li>
-                        @endcan
+                        @endcan --}}
                     </ul>
                 </div>
             </li>
@@ -141,12 +141,12 @@ Tip 2: you can also add an image using data-image tag
                 <div class="collapse  @if($activeButton =='laravel') show @endif" id="laravelExamples">
                     <ul class="nav">
 
-                        <li class="nav-item @if($activePage == 'profile') active @endif">
+                        {{-- <li class="nav-item @if($activePage == 'profile') active @endif">
                             <a class="nav-link" href={{ route('profile.edit') }}>
                                 <span class="sidebar-mini">{{ __('P') }}</span>
                                 <span class="sidebar-normal">{{ __('Profile') }}</span>
                             </a>
-                        </li>
+                        </li> --}}
 
                         @can('manage-users', App\User::class)
                             <li class="nav-item @if($activePage == 'role') active @endif">
@@ -184,7 +184,7 @@ Tip 2: you can also add an image using data-image tag
                             </li>
                         @endcan
 
-                        @can('manage-items', App\User::class)
+                        {{-- @can('manage-items', App\User::class)
                             <li class="nav-item @if($activePage == 'item') active @endif">
                                 <a class="nav-link" href={{route('item.index')}}>
                                     <span class="sidebar-mini">{{ __('IM') }}</span>
@@ -198,7 +198,7 @@ Tip 2: you can also add an image using data-image tag
                                     <span class="sidebar-normal">{{ __('Items') }}</span>
                                 </a>
                             </li>
-                        @endcan
+                        @endcan --}}
                     </ul>
                 </div>
             </li>
@@ -211,7 +211,7 @@ Tip 2: you can also add an image using data-image tag
                         <b class="caret"></b>
                     </p>
                 </a>
-                <div class="collapse @if($activeButton =='components') show @endif" id="componentsExamples">
+                {{-- <div class="collapse @if($activeButton =='components') show @endif" id="componentsExamples">
                     <ul class="nav">
                         <li class="nav-item @if($activePage == 'buttons') active @endif">
                             <a class="nav-link" href="{{route('page.index', 'components.buttons')}}">
@@ -256,7 +256,7 @@ Tip 2: you can also add an image using data-image tag
                             </a>
                         </li>
                     </ul>
-                </div>
+                </div> --}}
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#formsExamples"  @if($activeButton == 'forms') aria-expanded="true" @endif>
@@ -266,7 +266,7 @@ Tip 2: you can also add an image using data-image tag
                         <b class="caret"></b>
                     </p>
                 </a>
-                <div class="collapse @if($activeButton == 'forms') show @endif" id="formsExamples">
+                {{-- <div class="collapse @if($activeButton == 'forms') show @endif" id="formsExamples">
                     <ul class="nav">
                         <li class="nav-item @if($activePage == 'regular-forms') active @endif">
                             <a class="nav-link" href="{{ route('page.index', 'forms.regular-forms') }}">
@@ -293,7 +293,7 @@ Tip 2: you can also add an image using data-image tag
                             </a>
                         </li>
                     </ul>
-                </div>
+                </div> --}}
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#tablesExamples" @if($activeButton == 'tables') aria-expanded="true" @endif>
@@ -303,7 +303,7 @@ Tip 2: you can also add an image using data-image tag
                         <b class="caret"></b>
                     </p>
                 </a>
-                <div class="collapse @if($activeButton == 'tables') show @endif" id="tablesExamples">
+                {{-- <div class="collapse @if($activeButton == 'tables') show @endif" id="tablesExamples">
                     <ul class="nav">
                         <li class="nav-item @if($activePage == 'regular') active @endif">
                             <a class="nav-link" href="{{ route('page.index', 'tables.regular') }}">
@@ -330,7 +330,7 @@ Tip 2: you can also add an image using data-image tag
                             </a>
                         </li>
                     </ul>
-                </div>
+                </div> --}}
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#mapsExamples" @if($activeButton == 'maps') aria-expanded="true" @endif>
@@ -340,7 +340,7 @@ Tip 2: you can also add an image using data-image tag
                         <b class="caret"></b>
                     </p>
                 </a>
-                <div class="collapse @if($activeButton == 'maps') show @endif" id="mapsExamples">
+                {{-- <div class="collapse @if($activeButton == 'maps') show @endif" id="mapsExamples">
                     <ul class="nav">
                         <li class="nav-item  @if($activePage == 'google') active @endif">
                             <a class="nav-link" href="{{ route('page.index', 'maps.google') }}">
@@ -361,8 +361,8 @@ Tip 2: you can also add an image using data-image tag
                             </a>
                         </li>
                     </ul>
-                </div>
-            </li>
+                </div> --}}
+            {{-- </li>
             <li class="nav-item @if($activePage == 'charts') active @endif">
                 <a class="nav-link" href="{{ route('page.index', 'charts') }}">
                     <i class="nc-icon nc-chart-bar-32"></i>
@@ -374,7 +374,7 @@ Tip 2: you can also add an image using data-image tag
                     <i class="nc-icon nc-single-copy-04"></i>
                     <p>{{ __('Calendar') }}</p>
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#pagesExamples">
                     <i class="nc-icon nc-puzzle-10"></i>
@@ -385,12 +385,12 @@ Tip 2: you can also add an image using data-image tag
                 </a>
                 <div class="collapse " id="pagesExamples">
                     <ul class="nav">
-                        <li class="nav-item  ">
+                        {{-- <li class="nav-item  ">
                             <a class="nav-link" href="{{ route('profile.edit') }}">
                                 <span class="sidebar-mini">{{ __('UP') }}</span>
                                 <span class="sidebar-normal">{{ __('User Page') }}</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item  ">
                             <a class="nav-link" href="#lbd">
                                 <span class="sidebar-mini">{{ __('MCS') }}</span>
