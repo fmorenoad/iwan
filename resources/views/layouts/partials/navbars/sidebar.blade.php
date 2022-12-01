@@ -13,34 +13,7 @@ Tip 2: you can also add an image using data-image tag
                 {{ env('APP_NAME', 'IWAN') }}
             </a>
         </div>
-       {{--  <div class="user">
-            <div class="photo">
-                <img src="{{ auth()->user()->profilePicture() }}" />
-            </div>
-            <div class="info ">
-                <a data-toggle="collapse" href="#collapseExample" class="collapsed">
-                    <span>{{ auth()->user()->name }}
-                        <b class="caret"></b>
-                    </span>
-                </a>
-                <div class="collapse" id="collapseExample">
-                    <ul class="nav">
-                        <li>
-                        <a class="profile-dropdown" href="{{ route('profile.edit') }}">
-                                <span class="sidebar-mini">{{ __('MP') }}</span>
-                                <span class="sidebar-normal">{{ __('My Profile') }}</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="profile-dropdown" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    <span class="sidebar-mini">{{ __('LG') }}</span>
-                                    <span class="sidebar-normal">{{ __('Log out') }}</span>
-                                </a>
-                            </li>
-                    </ul>
-                </div>
-            </div>
-        </div> --}}
+
         <ul class="nav">
             <li class="nav-item @if($activePage == 'dashboard') active @endif">
                 <a class="nav-link" href={{ route('home') }}>
@@ -49,158 +22,33 @@ Tip 2: you can also add an image using data-image tag
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#laravelExamples" @if($activeButton =='admin') aria-expanded="true" @endif>
+                <a class="nav-link" data-toggle="collapse" href="#admin" @if($activeButton =='admin') aria-expanded="true" @endif>
                     <i class="nc-icon nc-grid-45"></i>
-                    <p>
-                        {{ __('Admin') }}
-                        <b class="caret"></b>
-                    </p>
+                    <p>{{ __('Admin') }}<b class="caret"></b></p>
                 </a>
-                <div class="collapse  @if($activeButton =='admin') show @endif" id="laravelExamples">
+                <div class="collapse  @if($activePage =='admin') show @endif" id="admin">
                     <ul class="nav">
-
-                        <li class="nav-item @if($activePage == 'permissions') active @endif">
+                        <li class="nav-item @if($activeButton == 'permissions') active @endif">
                             <a class="nav-link" href={{ route('admin.permissions.index') }}>
                                 <span class="sidebar-mini">{{ __('P') }}</span>
                                 <span class="sidebar-normal">{{ __('Permissions') }}</span>
                             </a>
                         </li>
-
-                        {{-- <li class="nav-item @if($activePage == 'profile') active @endif">
-                            <a class="nav-link" href={{ route('profile.edit') }}>
-                                <span class="sidebar-mini">{{ __('P') }}</span>
-                                <span class="sidebar-normal">{{ __('Profile') }}</span>
+                        <li class="nav-item @if($activeButton == 'roles') active @endif">
+                            <a class="nav-link" href={{ route('admin.roles.index') }}>
+                                <span class="sidebar-mini">{{ __('R') }}</span>
+                                <span class="sidebar-normal">{{ __('Roles') }}</span>
                             </a>
                         </li>
-
-                        @can('manage-users', App\User::class)
-                            <li class="nav-item @if($activePage == 'role') active @endif">
-                                <a class="nav-link" href={{ route('role.index') }}>
-                                    <span class="sidebar-mini">{{ __('RM') }}</span>
-                                    <span class="sidebar-normal">{{ __('Role Managements') }}</span>
-                                </a>
-                            </li>
-                        @endcan
-
-                        @can('manage-users', App\User::class)
-                            <li class="nav-item @if($activePage == 'user') active @endif">
-                                <a class="nav-link" href={{route('user.index')}}>
-                                    <span class="sidebar-mini">{{ __('UM') }}</span>
-                                    <span class="sidebar-normal">{{ __('User Managements') }}</span>
-                                </a>
-                            </li>
-                        @endcan
-                        
-                        @can('manage-items', App\User::class)
-                            <li class="nav-item @if($activePage == 'category') active @endif">
-                                <a class="nav-link" href={{route('category.index')}}>
-                                    <span class="sidebar-mini">{{ __('CM') }}</span>
-                                    <span class="sidebar-normal">{{ __('Category Managements') }}</span>
-                                </a>
-                            </li>
-                        @endcan
-
-                        @can('manage-items', App\User::class)
-                            <li class="nav-item @if($activePage == 'tag') active @endif">
-                                <a class="nav-link" href={{route('tag.index')}}>
-                                    <span class="sidebar-mini">{{ __('TM') }}</span>
-                                    <span class="sidebar-normal">{{ __('Tag Managements') }}</span>
-                                </a>
-                            </li>
-                        @endcan
-
-                        @can('manage-items', App\User::class)
-                            <li class="nav-item @if($activePage == 'item') active @endif">
-                                <a class="nav-link" href={{route('item.index')}}>
-                                    <span class="sidebar-mini">{{ __('IM') }}</span>
-                                    <span class="sidebar-normal">{{ __('Item Managements') }}</span>
-                                </a>
-                            </li>
-                        @else
-                            <li class="nav-item @if($activePage == 'item') active @endif">
-                                <a class="nav-link" href={{route('item.index')}}>
-                                    <span class="sidebar-mini">{{ __('I') }}</span>
-                                    <span class="sidebar-normal">{{ __('Items') }}</span>
-                                </a>
-                            </li>
-                        @endcan --}}
-                    </ul>
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#laravelExamples" @if($activeButton =='laravel') aria-expanded="true" @endif>
-                    <i>
-                        <img src="{{ asset('img/laravel.svg') }}" style="width:25px">
-                    </i>
-                    <p>
-                        {{ __('Laravel example') }}
-                        <b class="caret"></b>
-                    </p>
-                </a>
-                <div class="collapse  @if($activeButton =='laravel') show @endif" id="laravelExamples">
-                    <ul class="nav">
-
-                        {{-- <li class="nav-item @if($activePage == 'profile') active @endif">
-                            <a class="nav-link" href={{ route('profile.edit') }}>
-                                <span class="sidebar-mini">{{ __('P') }}</span>
-                                <span class="sidebar-normal">{{ __('Profile') }}</span>
+                        <li class="nav-item @if($activeButton == 'users') active @endif">
+                            <a class="nav-link" href={{ route('admin.users.index') }}>
+                                <span class="sidebar-mini">{{ __('U') }}</span>
+                                <span class="sidebar-normal">{{ __('Users') }}</span>
                             </a>
-                        </li> --}}
-
-                        @can('manage-users', App\User::class)
-                            <li class="nav-item @if($activePage == 'role') active @endif">
-                                <a class="nav-link" href={{ route('role.index') }}>
-                                    <span class="sidebar-mini">{{ __('RM') }}</span>
-                                    <span class="sidebar-normal">{{ __('Role Managements') }}</span>
-                                </a>
-                            </li>
-                        @endcan
-
-                        @can('manage-users', App\User::class)
-                            <li class="nav-item @if($activePage == 'user') active @endif">
-                                <a class="nav-link" href={{route('user.index')}}>
-                                    <span class="sidebar-mini">{{ __('UM') }}</span>
-                                    <span class="sidebar-normal">{{ __('User Managements') }}</span>
-                                </a>
-                            </li>
-                        @endcan
-                        
-                        @can('manage-items', App\User::class)
-                            <li class="nav-item @if($activePage == 'category') active @endif">
-                                <a class="nav-link" href={{route('category.index')}}>
-                                    <span class="sidebar-mini">{{ __('CM') }}</span>
-                                    <span class="sidebar-normal">{{ __('Category Managements') }}</span>
-                                </a>
-                            </li>
-                        @endcan
-
-                        @can('manage-items', App\User::class)
-                            <li class="nav-item @if($activePage == 'tag') active @endif">
-                                <a class="nav-link" href={{route('tag.index')}}>
-                                    <span class="sidebar-mini">{{ __('TM') }}</span>
-                                    <span class="sidebar-normal">{{ __('Tag Managements') }}</span>
-                                </a>
-                            </li>
-                        @endcan
-
-                        {{-- @can('manage-items', App\User::class)
-                            <li class="nav-item @if($activePage == 'item') active @endif">
-                                <a class="nav-link" href={{route('item.index')}}>
-                                    <span class="sidebar-mini">{{ __('IM') }}</span>
-                                    <span class="sidebar-normal">{{ __('Item Managements') }}</span>
-                                </a>
-                            </li>
-                        @else
-                            <li class="nav-item @if($activePage == 'item') active @endif">
-                                <a class="nav-link" href={{route('item.index')}}>
-                                    <span class="sidebar-mini">{{ __('I') }}</span>
-                                    <span class="sidebar-normal">{{ __('Items') }}</span>
-                                </a>
-                            </li>
-                        @endcan --}}
+                        </li>
                     </ul>
                 </div>
+                
             </li>
 
             <li class="nav-item">
