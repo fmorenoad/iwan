@@ -21,8 +21,8 @@ use App\Http\Controllers\Api\PasasteSinTagController;
 */
 
 Route::view('/', 'welcome');
-Route::get('/api', [PasasteSinTagController::class, 'login_pasaste_sin_tag']);
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/api', [PasasteSinTagController::class, 'get_pases_diarios']);
+//Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 /* Route::view('password/reset','welcome')->name('password.reset'); */
 

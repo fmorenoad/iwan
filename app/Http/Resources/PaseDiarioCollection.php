@@ -15,10 +15,7 @@ class PaseDiarioCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data' => $this->collection,
-            'links' => [
-                'self' => route('api.v1.pases_diarios.index')
-            ]
+            'deudas' => $this->collection,
         ];
     }
 }
