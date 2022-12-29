@@ -13,19 +13,19 @@ class ScadaController extends Controller
 {
     public function recibo_informe_pago(Request $request)
     {
-        $now = Carbon::now()->format('Ymd HHMMII');
+        $now = Carbon::now()->format('Ymd His');
         $file = Storage::disk('local')->put( "recibo_informe_pago".$now.".txt", $request);
 
         foreach($request->pago as $pago)
         {
             $pago_pase_diario = new Pago([
-                "identificador" => $pago->identificador,
-                "monto" => $pago->monto,
-                "comprobante" => $pago->comprobante,
-                "fecha_pago" => $pago->fecha_pago,
-                "canal_pago_id" => $pago->canal_pago_id,
-                "forma_pago_id" => $pago->forma_pago_id,
-                "estado" => 0
+                'identificador' => $pago['identificador'],
+                'monto' => $pago['monto'],
+                'comprobante' => $pago['comprobante'],
+                'fecha_pago' => $pago['fecha_pago'],
+                'canal_pago_id' => $pago['canal_pago_id'],
+                'forma_pago_id' => $pago['forma_pago_id'],
+                'estado' => 0
             ]); 
 
             $pago_pase_diario->save();
