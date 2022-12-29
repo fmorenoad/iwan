@@ -1,19 +1,15 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ScadaController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::post('login', [AuthController::class, 'login'])->name('api.login');
+Route::post('register', [AuthController::class, 'register'])->name('api.register');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => ['auth:sanctum']], function(){
+    Route::post('logout', [AuthController::class, 'logout']);    
 });
+
+Route::middleware('auth:sanctum')->post('/recibo_informe_pago', [ScadaController::class, 'recibo_informe_pago'])->name('api.recibo_informe_pago');
+Route::middleware('auth:sanctum')->post('/recibir_anular_pago', [ScadaController::class, 'recibir_anular_pago'])->name('api.recibir_anular_pago');

@@ -5,14 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Anulacion;
 use App\Models\Pago;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ScadaController extends Controller
 {
     public function recibo_informe_pago(Request $request)
     {
-        #Pendiente: validar estructura de datos recepcionados.
-        foreach($request['pago'] as $pago)
+        $now = Carbon::now()->format('Ymd HHMMII');
+        $file = Storage::disk('local')->put( "recibo_informe_pago".$now.".txt", $request);
+
+        foreach($request->pago as $pago)
         {
             $pago_pase_diario = new Pago([
                 "identificador" => $pago->identificador,
@@ -39,7 +43,7 @@ class ScadaController extends Controller
     public function recibir_anular_pago(Request $request)
     {
         #Pendiente: validar estructura de datos recepcionados.
-        foreach($request['pago'] as $anulacion)
+        foreach($request->pago as $anulacion)
         {
             $anulacion_pase_diario = new Anulacion([
                 "identificador" => $anulacion->identificador,

@@ -10,11 +10,9 @@ use App\Models\Pago;
 use App\Models\PaseDiario;
 use App\Models\PaseDiarioDetalle;
 use Illuminate\Http\Request;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\TryCatch;
 
 class PasasteSinTagController extends Controller
 {
@@ -22,6 +20,8 @@ class PasasteSinTagController extends Controller
     private $pst_user = "aconcagua";
     private $pst_password = "da!9No86nXGJ";
     private $pst_token = null;
+
+    private $date_init, $date_end;
 
     public function login_pst()
     {
@@ -81,33 +81,62 @@ class PasasteSinTagController extends Controller
 
     public function ingreso_deuda_pst()
     {
-        #query a base de datos scada. get_transitos_scada()
-        #registrar pases diarios en base de datos mysql
-        #generar resumen de pases diarios en base de datos mysql
+        
+        $pases_diarios = PaseDiario::where('Estado',0)->limit(2)->get();
+        $collector = PaseDiarioCollection::make($pases_diarios);
 
-        #leer los pases diarios pendientes de envío y enviarlos a pasastesintag.cl
-        $params_api = [
-            "identificador" => "",
-            "fecha" => "YYYY-MM-DD",
-            "patente" => "",
-            "deuda" => "",
-            "deuda_tag" => "",
-            "categoria" => "",
-            "tipo_patente" => "",
-        ];
+        return $collector;
 
-        $uri = env('API_PST_URL')."ingreso_deuda";
+        if(is_null($this->pst_token))
+        {
+            $this->login_pst();
+        }
 
-        $response = Http::post($uri, $params_api);
+        $uri = $uri = $this->pst_host."ingreso_deuda";
+
+        $response = Http::withToken($this->pst_token)->post($uri, $collector);
 
         dd($response->json());
 
+        if($response->status() == 201){
+            foreach($pases_diarios AS $pase_diario)
+            {
+                $pase_diario->Estado = 3; // Pase diario informado a pasaste sin tag exitosamente.
+                $pase_diario->save();
+            }
+        }elseif($response->status() == 400)
+        {
+            foreach($pases_diarios AS $pase_diario)
+            {
+                $pase_diario->Estado = 3; // Pase diario informado a pasaste sin tag exitosamente.
+                $pase_diario->save();
+            }
+
+            foreach($response["data"]["errores"] AS $pase_diario_error )
+            {
+                $pase_diario = PaseDiario::where('Identificador', $pase_diario_error->indetificador);
+                $pase_diario->Estado = 10; // Pase dairio reportado con error al cargar deuda.
+                $pase_diario->save();
+            }
+        }elseif($response->status() == 401)
+        {
+            if(!is_null($this->pst_token))
+            {
+                $this->refresh_token_pst();
+            }
+
+            $response = Http::withToken($this->pst_token)->post($uri, $collector);
+        }     
+
+        return $response["data"];
+
     }
 
-    public function get_pases_diarios()//: PaseDiarioResource
+    #Este metodo, prepara los pases diarios agrupados 
+    public function get_pases_diarios()
     {
-        /* $this->get_transitos_urbanos();
-        $this->get_transitos_interurbanos(); */
+        $this->get_transitos_urbanos();
+        $this->get_transitos_interurbanos();
 
         $pases_diarios = DB::table('pase_diario_detalles')
                 ->selectRaw('Identificador,Fecha, Patente, Categoria, COUNT(1) AS CantidadPasesDiarios, SUM(Deuda) AS Deuda, SUM(DeudaTag) AS DeudaTag, 1 AS TipoPatente, 0 AS Estado')
@@ -139,18 +168,14 @@ class PasasteSinTagController extends Controller
                                 ->update(['pase_diario_id' => $pase_diario->id]);
                 }
         }
-
-        # Envío de deuda a PasasteSinTag.cl
-        #Desarrollar solicitud
-        return PaseDiario::where('Estado',0);
-
     }
 
+    # Description: Obtener pases diarios urbanos y almacenar.
     #Job planificado cada cierta cantidad de tiempo
     private function get_transitos_urbanos()
     {
-        $date = Carbon::now()->subDays(1)->format('Ymd');
-        $date_tomorrow = Carbon::tomorrow()->subDays(1)->format('Ymd');
+        $date = Carbon::now()->subDays(30)->format('Ymd');
+        $date_tomorrow = Carbon::tomorrow(1)->subDays(28)->format('Ymd');
 
         $query_pd_urbano = "SELECT
             '00'+CONVERT(VARCHAR, t.FechaHora, 112)+'12'+RTRIM(LTRIM(dt.Patente)) AS 'Identificador'
@@ -221,10 +246,12 @@ class PasasteSinTagController extends Controller
         }
     }
 
+    # Description: Obtener pases diarios interurbanos y almacenar.
+    #Job planificado cada cierta cantidad de tiempo
     private function get_transitos_interurbanos()
     {
-        $date = Carbon::now()->subDays(1)->format('Ymd');
-        $date_tomorrow = Carbon::tomorrow()->subDays(1)->format('Ymd');
+        $date = Carbon::now()->subDays(30)->format('Ymd');
+        $date_tomorrow = Carbon::tomorrow(1)->subDays(28)->format('Ymd');
 
         $query_pd_interurbano = "SELECT
             '00'+CONVERT(VARCHAR, t.FechaHora, 112)+'12'+RTRIM(LTRIM(dt.Patente)) AS 'Identificador'
@@ -307,22 +334,16 @@ class PasasteSinTagController extends Controller
 
     }
 
-    public function pago_deuda_pasaste_sin_tag()
+    #Description: Generado desde interfaz grafica.
+    public function pago_deuda_pasaste_sin_tag(Request $request)
     {
         $params_api = [
-            "comprobante" => "",
-            "fecha_pago" => "YYYY-MM-DD",
-            "forma_pago_id" => "",
+            "comprobante" => (string) $request->comprobante,
+            "forma_pago_id" => (int) $request->forma_pago_id,
+            "fecha_pago" => (string) $request->fecha_pago,
+            
             "pagos" => [
-                [
-                    "identificador" => "",
-                    "monto" => 5000
-                ],
-                [
-                    "identificador" => "",
-                    "monto" => 600
-                ]
-
+                $request->pases_diarios
             ],
         ];
 
@@ -330,8 +351,19 @@ class PasasteSinTagController extends Controller
 
         $response = Http::post($uri, $params_api);
 
-        dd($response->json());
-  
+        $response = $response->json();
+
+        if($response->status() == 200)
+        {
+            foreach($request->pases_diarios AS $pase_diario)
+            {
+                $pase_diario->Estado = 10; // Pase diario informado a pasaste sin tag como pagado exitosamente.
+                $pase_diario->save();
+            }
+            return $response->json();
+        }else{
+            return $response->json();
+        }
     }
 
     public function modificacion_registro_deuda_pasaste_sin_tag()
