@@ -81,11 +81,13 @@ class PasasteSinTagController extends Controller
 
     public function ingreso_deuda_pst()
     {
+        // Esta tarea la debe ejecutar un cronjob, todos los días
+        //$this->get_pases_diarios();
         
         $pases_diarios = PaseDiario::where('Estado',0)->limit(2)->get();
         $collector = PaseDiarioCollection::make($pases_diarios);
 
-        return $collector;
+        //return $collector;
 
         if(is_null($this->pst_token))
         {
@@ -96,7 +98,7 @@ class PasasteSinTagController extends Controller
 
         $response = Http::withToken($this->pst_token)->post($uri, $collector);
 
-        dd($response->json());
+        $pases_diarios = $response->json();
 
         if($response->status() == 201){
             foreach($pases_diarios AS $pase_diario)
@@ -126,17 +128,20 @@ class PasasteSinTagController extends Controller
             }
 
             $response = Http::withToken($this->pst_token)->post($uri, $collector);
-        }     
+        }
+        
+        dd($response->json());
 
         return $response["data"];
 
     }
 
     #Este metodo, prepara los pases diarios agrupados 
-    public function get_pases_diarios()
+    static public function get_pases_diarios()
     {
-        $this->get_transitos_urbanos();
-        $this->get_transitos_interurbanos();
+        // Tareas que debe ejecutar una tarea programada
+        /* $this->get_transitos_urbanos();
+        $this->get_transitos_interurbanos(); */
 
         $pases_diarios = DB::table('pase_diario_detalles')
                 ->selectRaw('Identificador,Fecha, Patente, Categoria, COUNT(1) AS CantidadPasesDiarios, SUM(Deuda) AS Deuda, SUM(DeudaTag) AS DeudaTag, 1 AS TipoPatente, 0 AS Estado')
@@ -172,14 +177,14 @@ class PasasteSinTagController extends Controller
 
     # Description: Obtener pases diarios urbanos y almacenar.
     #Job planificado cada cierta cantidad de tiempo
-    private function get_transitos_urbanos()
+    public function get_transitos_urbanos()
     {
         $date = Carbon::now()->subDays(30)->format('Ymd');
         $date_tomorrow = Carbon::tomorrow(1)->subDays(28)->format('Ymd');
 
         $query_pd_urbano = "SELECT
-            '00'+CONVERT(VARCHAR, t.FechaHora, 112)+'12'+RTRIM(LTRIM(dt.Patente)) AS 'Identificador'
-            , RTRIM(LTRIM(dt.Patente)) AS 'Patente'
+            '00'+CONVERT(VARCHAR, t.FechaHora, 112)+'12'+'0000'+RTRIM(LTRIM(dt.Patente)) AS 'Identificador'
+            , '0000' + CAST(RTRIM(LTRIM(dt.Patente)) AS VARCHAR) AS 'Patente'
             , CONVERT(VARCHAR, t.FechaHora, 23) AS 'Fecha'
             , dt.ClaseCategoria
             , cc.Descripcion AS 'ClaseCategoriaDescripcion'
@@ -201,6 +206,7 @@ class PasasteSinTagController extends Controller
             '00'+CONVERT(VARCHAR, t.FechaHora, 112)+'12'+RTRIM(LTRIM(dt.Patente))
             , dt.Patente  
             , CONVERT(VARCHAR, t.FechaHora, 23)
+            , t.FechaHora
             , dt.ClaseCategoria 
             , cc.Descripcion 
             , dt.Categoria 
@@ -209,7 +215,7 @@ class PasasteSinTagController extends Controller
         HAVING
             Patente <> '' AND ((LEN(Patente) IN (5) AND Categoria = 4) OR (LEN(Patente) IN (6))) 
             ORDER BY dt.Patente ASC, CONVERT(VARCHAR, t.FechaHora, 23) ASC, dt.Categoria DESC";
-        
+                       
         try
         {
             $pases_diarios_urbanos = DB::connection('sqlsrv')->select($query_pd_urbano);
@@ -248,14 +254,14 @@ class PasasteSinTagController extends Controller
 
     # Description: Obtener pases diarios interurbanos y almacenar.
     #Job planificado cada cierta cantidad de tiempo
-    private function get_transitos_interurbanos()
+    public function get_transitos_interurbanos()
     {
         $date = Carbon::now()->subDays(30)->format('Ymd');
         $date_tomorrow = Carbon::tomorrow(1)->subDays(28)->format('Ymd');
 
         $query_pd_interurbano = "SELECT
-            '00'+CONVERT(VARCHAR, t.FechaHora, 112)+'12'+RTRIM(LTRIM(dt.Patente)) AS 'Identificador'
-            , RTRIM(LTRIM(dt.Patente)) AS 'Patente' 
+            '00'+CONVERT(VARCHAR, t.FechaHora, 112)+'12'+'0000'+RTRIM(LTRIM(dt.Patente)) AS 'Identificador'
+            , '0000' + CAST(RTRIM(LTRIM(dt.Patente)) AS VARCHAR) AS 'Patente' 
             , CONVERT(VARCHAR, t.FechaHora, 23) AS 'Fecha'
             , dt.ClaseCategoria 
             , cc.Descripcion AS 'ClaseCategoriaDescripcion' 
@@ -286,7 +292,7 @@ class PasasteSinTagController extends Controller
             '00'+CONVERT(VARCHAR, t.FechaHora, 112)+'12'+RTRIM(LTRIM(dt.Patente))
             , dt.Patente  
             , CONVERT(VARCHAR, t.FechaHora, 23) 
-            ,t.FechaHora
+            , t.FechaHora
             , dt.ClaseCategoria
             , cc.Descripcion
             , dt.Categoria
